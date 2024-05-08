@@ -30,7 +30,7 @@ public class SqlDataAccess : ISqlDataAccess
    // We don't need anything back so we don't need to mark it as async and await for data back becuase
    // it will consume some resources
    // Task by itdelf is equivelant to void
-   public Task SaveData<T>(string storedProcedure, T parameters, string connectionStringName)
+   public async Task SaveData<T>(string storedProcedure, T parameters, string connectionStringName)
    {
       string connectionString = _config.GetConnectionString(connectionStringName);
 
@@ -39,7 +39,7 @@ public class SqlDataAccess : ISqlDataAccess
       // The caller will wait on it and will stay marked as asynchronous
       // But we don't wait on it and we get back / return Task which is void that its
       // not marked as async becuase we are not awaiting something
-      return connection.ExecuteAsync(storedProcedure, parameters,
+      await connection.ExecuteAsync(storedProcedure, parameters,
          commandType: CommandType.StoredProcedure);
 
    }

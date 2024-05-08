@@ -13,7 +13,7 @@ public class TodoData : ITodoData
 
    public Task<List<TodoDbModel>> GetAllAssigned(int assignedTo)
    {
-      return _sql.LoadData<TodoDbModel, dynamic>("dbo.sp_Todos_GetAllAssigned",
+      return _sql.LoadData<TodoDbModel, dynamic>("dbo.spTodos_GetAllAssigned",
          new { AssignedTo = assignedTo },
          "Default");
 
@@ -21,7 +21,7 @@ public class TodoData : ITodoData
 
    public async Task<TodoDbModel?> GetOneAssigned(int assignedTo, int todoId)
    {
-      var results = await _sql.LoadData<TodoDbModel, dynamic>("dbo.sp_Todos_GetOneAssigned",
+      var results = await _sql.LoadData<TodoDbModel, dynamic>("dbo.spTodos_GetOneAssigned",
          new { AssignedTo = assignedTo, TodoId = todoId },
          "Default");
 
@@ -31,7 +31,7 @@ public class TodoData : ITodoData
 
    public async Task<TodoDbModel?> Create(int assignedTo, string task)
    {
-      var results = await _sql.LoadData<TodoDbModel, dynamic>("dbo.sp_Todos_Create",
+      var results = await _sql.LoadData<TodoDbModel, dynamic>("dbo.spTodos_Create",
          new { AssignedTo = assignedTo, Task = task },
          "Default");
 
@@ -41,7 +41,7 @@ public class TodoData : ITodoData
 
    public Task UpdateTask(int assignedTo, int todoId, string task)
    {
-      return _sql.SaveData<dynamic>("dbo.sp_Todos_UpdateTask",
+      return _sql.SaveData<dynamic>("dbo.spTodos_UpdateTask",
          new { AssignedTo = assignedTo, TodoId = todoId, Task = task },
          "Default");
 
@@ -49,7 +49,7 @@ public class TodoData : ITodoData
 
    public Task CompleteTodo(int assignedTo, int todoId)
    {
-      return _sql.SaveData<dynamic>("dbo.sp_Todos_CompleteTodo",
+      return _sql.SaveData<dynamic>("dbo.spTodos_CompleteTodo",
          new { AssignedTo = assignedTo, TodoId = todoId },
          "Default");
 
@@ -57,7 +57,7 @@ public class TodoData : ITodoData
 
    public Task Delete(int assignedTo, int todoId)
    {
-      return _sql.SaveData<dynamic>("dbo.sp_Todos_Delete",
+      return _sql.SaveData<dynamic>("dbo.spTodos_Delete",
          new { AssignedTo = assignedTo, TodoId = todoId },
          "Default");
 

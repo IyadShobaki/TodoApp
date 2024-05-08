@@ -66,13 +66,13 @@ public class AuthenticationController : ControllerBase
    {
       // THIS IS NOT PRODUCTION CODE - REPLACE THIS WITH A CALL TO YOUR AUTH SYSTEM
       if (CompareValues(data.UserName, "ishobaki") &&
-          CompareValues(data.UserName, "Test123"))
+          CompareValues(data.Password, "Test123"))
       {
          return new UserData(1, "Iyad", "Shobaki", data.UserName!);
       }
 
       if (CompareValues(data.UserName, "sstorm") &&
-         CompareValues(data.UserName, "Test123"))
+         CompareValues(data.Password, "Test123"))
       {
          return new UserData(2, "Sue", "Storm", data.UserName!);
       }
