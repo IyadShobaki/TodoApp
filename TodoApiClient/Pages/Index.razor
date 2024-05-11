@@ -6,6 +6,12 @@
 
 <PageTitle>Index</PageTitle>
 
+@if (string.IsNullOrWhiteSpace(errorMessage) == false)
+{
+    <div class="h3 text-danger">@errorMessage</div>
+}
+
+
 @if(isLoggedIn)
 {
     <h1>Yo are LoggedIn</h1>
@@ -17,7 +23,14 @@ else
 
     <EditForm Model="login" OnValidSubmit="HandleValidSubmit">
         <InputText @bind-Value="login.UserName" />
-        <InputText type="password" @bind-Value="login.Password" />
+        @* Added @oninput="@((ui) => { login.Password = ui.Value.ToString(); })" 
+            to password field because Blazor doesn't see the value. The root cause is because 
+            of secure keyboard input feature of the Anti Virus. 
+            Work around options:
+            (copy and paste the password/ fill the password by password manager/
+            Add "localhost" to the exclusions of the Anti Virus)
+        *@
+        <InputText type="password" @bind-Value="login.Password" @oninput="@((ui) => {login.Password = ui.Value.ToString();})" /> 
 
         <button class="btn btn-success" type="submit">Log In</button>
 
@@ -26,6 +39,8 @@ else
 @code{
     private AuthenticationModel login = new();
     private bool isLoggedIn = false;
+    private string? errorMessage;
+
 
     protected override void OnInitialized()
     {
@@ -34,14 +49,26 @@ else
 
     private async void HandleValidSubmit()
     {
+        errorMessage = "";
         var client = factory.CreateClient("api");
 
         var info = await client.PostAsJsonAsync<AuthenticationModel>("Authentication/token", login);
 
-        tokenInfo.Token = await info.Content.ReadAsStringAsync();
-        isLoggedIn = true;
-        await InvokeAsync(StateHasChanged); // To let Blazor know and render the page
-                                            //  (because we are using async coding)
+        string[] infoJson = info.ToString().Split(','); // temporary solution 
+        if (info.IsSuccessStatusCode)
+        {
+            tokenInfo.Token = await info.Content.ReadAsStringAsync();
+            isLoggedIn = true;
+            await InvokeAsync(StateHasChanged); // To let Blazor know and render the page
+                                                //  (because we are using async coding)
+        }
+        else
+        {
+
+            errorMessage = $"{infoJson[0]}, {info.ReasonPhrase}";
+            await InvokeAsync(StateHasChanged);
+        }
+
     }
 
     private void LogOut()
