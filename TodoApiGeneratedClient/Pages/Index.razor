@@ -1,0 +1,31 @@
+﻿@page "/"
+@using TodoApiGeneratedClient.Models
+@using TodoApiGeneratedClient.Services
+
+<PageTitle>Index</PageTitle>
+
+<h1>Hello, world!</h1>
+
+Welcome to your new app.
+
+<button class="btn btn-danger" @onclick="DoSomething">Do Something</button>
+
+
+@code {
+    private void DoSomething()
+    {
+        TodoApi test = new("https://localhost:7112", new HttpClient());
+
+        AuthenticationData authentication = new AuthenticationData
+            {
+                UserName = "ishobaki",
+                Password = "Test123"
+            };
+        TokenModel token = new TokenModel();
+        var info = test.TokenAsync(authentication);
+
+        
+        
+
+    }
+}
