@@ -5,6 +5,7 @@
 @inject TokenModel tokenInfo
 
 
+
 <PageTitle>Counter</PageTitle>
 
 <h1>ToDo List</h1>
@@ -28,6 +29,8 @@
         {
             <div class="h2">
                 @t.Task
+                <button class="btn btn-sm btn-primary"
+                        @onclick="() => CompleteTodo(t)">Complete</button>
             </div>
         }
     }
@@ -48,12 +51,29 @@
 
         try
         {
-            todos = await client.GetFromJsonAsync<List<TodoUIModel>>("Todos");
+            
+            todos= await client.GetFromJsonAsync<List<TodoUIModel>>("Todos");
+           
         }
         catch (Exception ex)
         {
             errorMessage = ex.Message;
         }
         await InvokeAsync(StateHasChanged);
+    }
+
+    private async void CompleteTodo(TodoUIModel todo)
+    {
+        var test = await client!.PutAsJsonAsync<string>($"Todos/{todo.Id}/Complete", "");
+
+        // test = test.Content.ReadAsStringAsync().Result;
+        // JArray jArray = JObject.Parse(test.Content.ReadAsStringAsync().Result);
+        if (test.IsSuccessStatusCode)
+        {
+        // Instead of making a call to the DB to fetch the list we can just change the todo model property IsComplete to true
+            todo.IsComplete = true;
+            await InvokeAsync(StateHasChanged);
+            
+        }
     }
 }
