@@ -1,5 +1,7 @@
 ﻿@page "/"
 @using System.Net.Http.Json
+@using System.Text
+@using Newtonsoft.Json.Linq
 @inject IHttpClientFactory factory
 @inject TokenModel tokenInfo
 
@@ -54,7 +56,18 @@ else
 
         var info = await client.PostAsJsonAsync<AuthenticationModel>("Authentication/token", login);
 
-        string[] infoJson = info.ToString().Split(','); // temporary solution 
+        // var test = info.StatusCode;
+        // var test2 = info.ReasonPhrase;
+        // var test3 = info.TrailingHeaders;
+        // var test4 = info.RequestMessage;
+
+        // var test1 = info.Content.Headers;
+        // var test5 = new StreamReader(info.Content.ReadAsStream(), Encoding.UTF8);
+
+        //string[] infoJson = info.ToString().Split(','); // temporary solution 
+        var infoJson = Convert.ToString(info).Split(',');
+
+
         if (info.IsSuccessStatusCode)
         {
             tokenInfo.Token = await info.Content.ReadAsStringAsync();
@@ -65,7 +78,7 @@ else
         else
         {
 
-            errorMessage = $"{infoJson[0]}, {info.ReasonPhrase}";
+            errorMessage = $"{infoJson[0]}, {infoJson[1]}";
             await InvokeAsync(StateHasChanged);
         }
 
