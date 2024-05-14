@@ -18,9 +18,9 @@ var app = builder.Build();
 // Example of routing a request (Youtube tutorial)   
 // Endpoint task/4  - (.*) will take whatever after the slash and added to it to the url
 // $1 will tak whatever in (.*)
-
+// It didn't work/ It route the request from tasks/1 to todos/1 but it doesn't call the TodosController (the get method)
 /*app.UseRewriter(new Microsoft.AspNetCore.Rewrite.RewriteOptions()
-        .AddRedirect("tasks/(.*)", "todos/$1"));*/   // It didn't work
+        .AddRedirect("tasks/(.*)", "todos/$1"));*/
 
 /*var options = new Microsoft.AspNetCore.Rewrite.RewriteOptions()
         .AddRewrite("tasks/(.*)", "todos/$1", true);
