@@ -96,6 +96,31 @@ public class TodosController : ControllerBase
 
     }
 
+    // POST api/Todos/Upsert
+    [HttpPost("Upsert")]
+    public async Task<ActionResult<TodoDbModel>> Upsert([FromBody] TodoDbModel todo)
+    {
+
+
+        // _logger.LogInformation("POST: api/Todos (Task: {Task})", task);
+        // todo.AssignedTo = GetUserId();
+        try
+        {
+            var output = await _data.Upsert(todo);
+            if (output is null)
+            {
+                return NotFound();
+            }
+            return Ok(output);
+        }
+        catch (Exception ex)
+        {
+            //_logger.LogError(ex, "The POST call to api/Todos failed. Task value was {Task}", todo.Task);
+            return BadRequest();
+        }
+
+    }
+
     // PUT api/Todos/5
     [HttpPut("{todoId}")]
     public async Task<IActionResult> Put(int todoId, [FromBody] string task)
